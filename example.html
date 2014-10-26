@@ -1,0 +1,22 @@
+<title>Event Dispatcher example</title>
+
+<body></body>
+
+<script>
+  var dispatch = require('./index')
+  var render = require('update').createElement
+  var create = require('create')
+
+  function print(){
+    console.log(this.children[0].text)
+  }
+
+  var vdom = create(
+    ['.app',
+      ['button', {onClick: print}, 'one'],
+      ['button', {onClick: print}, 'two']])
+
+  var app = {dom: render(vdom), vdom: vdom}
+  document.body.appendChild(app.dom)
+  dispatch(app)
+</script>

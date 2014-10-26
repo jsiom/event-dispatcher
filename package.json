@@ -1,0 +1,16 @@
+{
+  "name": "event-dispatcher",
+  "version": "0.1.0",
+  "description": "dispatch events on the virtual DOM",
+  "keywords": ["event","virtual-dom"],
+  "dependencies": {},
+  "devDependencies": {
+    "update": "jsiom/update",
+    "create": "jsiom/create",
+    "serve": "jkroso/serve"
+  },
+  "repository": "git://github.com/jsiom/event-dispatcher.git",
+  "author": "Jake Rosoman",
+  "files": ["index.js"],
+  "license": "MIT"
+}
