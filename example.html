@@ -12,7 +12,7 @@
   }
 
   var vdom = create(
-    ['.app',
+    ['.app', {onClick: function(){ console.log('app') }},
       ['button', {onClick: print}, 'one'],
       ['button', {onClick: print}, 'two']])
 

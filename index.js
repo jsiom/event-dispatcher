@@ -3,8 +3,7 @@ var apps = []
 function dispatchAll(event) {
   for (var i = 0, len = apps.length; i < len; i++) {
     var app = apps[i]
-    // blur events fire during render if the focused
-    // element is removed from the DOM
+    // Ignore events which fire during render
     if (app.isRendering) continue
     dispatch(app.dom, app.vdom, event)
   }
@@ -14,15 +13,15 @@ function dispatchAll(event) {
 function dispatch(dom, vdom, event) {
   var target = event.target
   if (target === window) return
-  var path = []
+  var path = [vdom]
   while (target !== dom) {
-    // event not within dom
+    // event not within the app
     if (target === document) return
     path.push(indexOf(target))
     target = target.parentNode
   }
   var i = path.length
-  while (i--) {
+  while (i-- > 1) {
     vdom = vdom.children[path[i]]
     if (vdom.type == 'Thunk') vdom = vdom.call()
     path[i] = vdom
