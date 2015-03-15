@@ -13,27 +13,21 @@ function dispatchAll(event) {
 function dispatch(dom, vdom, event) {
   var target = event.target
   if (target === window) return
-  var path = [vdom]
-  while (target !== dom) {
-    // event not within the app
-    if (target === document) return
-    path.push(indexOf(target))
+  var path = [target]
+  while (true) {
     target = target.parentNode
+    if (target === document) return // event not within the app
+    if (target === dom) break
+    path.push(target)
   }
   var i = path.length
-  while (i-- > 1) {
-    vdom = vdom.children[path[i]]
+  while (true) {
     if (vdom.type == 'Thunk') vdom = vdom.call()
-    path[i] = vdom
-  }
-  propagate(path, event, event.type)
-}
-
-function propagate(nodes, event, type) {
-  for (var i = 0, len = nodes.length; i < len; i++) {
-    var node = nodes[i]
-    var fn = node.events[type]
-    if (fn) fn.call(node, event)
+    var fn = vdom.events[event.type]
+    if (fn) fn.call(vdom, event, dom)
+    if (--i < 0) break
+    dom = path[i]
+    vdom = vdom.children[indexOf(dom)]
   }
 }
 

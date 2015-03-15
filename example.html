@@ -7,14 +7,15 @@
   var render = require('update').createElement
   var create = require('create')
 
-  function print(){
-    console.log(this.children[0].text)
+  function log(){
+    console.log.apply(console, arguments)
   }
 
   var vdom = create(
-    ['.app', {onClick: function(){ console.log('app') }},
-      ['button', {onClick: print}, 'one'],
-      ['button', {onClick: print}, 'two']])
+    ['.app', {onClick: log},
+      ['button', {onClick: log}, 'one'],
+      ['button', {onClick: log}, 'two'],
+      ['button', {onClick: log}, 'three']])
 
   var app = {dom: render(vdom), vdom: vdom}
   document.body.appendChild(app.dom)
