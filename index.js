@@ -12,6 +12,7 @@ function dispatchAll(event) {
 
 function dispatch(dom, vdom, event) {
   var target = event.target
+  if (target === document) return
   if (target === window) return
   var path = [target]
   while (true) {
