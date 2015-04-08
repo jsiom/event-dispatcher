@@ -7,7 +7,6 @@ function dispatchAll(event) {
     if (app.isRendering) continue
     dispatch(app.dom, app.vdom, event)
   }
-  event.stopPropagation()
 }
 
 function dispatch(dom, vdom, event) {
@@ -26,9 +25,13 @@ function dispatch(dom, vdom, event) {
     if (vdom.type == 'Thunk') vdom = vdom.call()
     var fn = vdom.events[event.type]
     if (fn) fn.call(vdom, event, dom)
-    if (--i < 0) break
-    dom = path[i]
+    if (i === 0) {
+      event.stopPropagation() // no need to bubble it up the real dom
+      break
+    }
+    dom = path[--i]
     vdom = vdom.children[indexOf(dom)]
+    if (vdom == null) break
   }
 }
 
