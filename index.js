@@ -23,16 +23,15 @@ function dispatch(dom, vdom, event) {
   var i = path.length
   while (true) {
     if (vdom.type == 'Thunk') vdom = vdom.call()
+    if (vdom.type == null) break
     var fn = vdom.events[event.type]
     if (fn) fn.call(vdom, event, dom)
-    if (i === 0) {
-      event.stopPropagation() // no need to bubble it up the real dom
-      break
-    }
+    if (i === 0) break
     dom = path[--i]
     vdom = vdom.children[indexOf(dom)]
-    if (vdom == null) break
+    if (vdom == null) return
   }
+  event.stopPropagation() // no need to bubble into the real DOM
 }
 
 function indexOf(el) {
