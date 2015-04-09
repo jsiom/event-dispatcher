@@ -23,7 +23,7 @@ function dispatch(dom, vdom, event) {
   var i = path.length
   while (true) {
     if (vdom.type == 'Thunk') vdom = vdom.call()
-    if (vdom.type == null) break
+    if (vdom.type == null) return // a real DOM node inside the virtual DOM
     var fn = vdom.events[event.type]
     if (fn) fn.call(vdom, event, dom)
     if (i === 0) break
