@@ -15,7 +15,7 @@
     ['.app', {onClick: log},
       ['button', {onClick: log}, 'one'],
       ['button', {onClick: log}, 'two'],
-      ['button', {onClick: log}, 'three']])
+      ['button', {onClick: function(e,n){ log(e,n); return true /*stop propagation*/ }}, 'three']])
 
   var app = {dom: render(vdom), vdom: vdom}
   document.body.appendChild(app.dom)

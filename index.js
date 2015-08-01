@@ -20,18 +20,25 @@ function dispatch(dom, vdom, event) {
     if (target === dom) break
     path.push(target)
   }
-  var i = path.length
-  while (true) {
-    if (vdom instanceof Node) return // real DOMNode
-    if (vdom.type == 'Thunk') vdom = vdom.call()
-    var fn = vdom.events[event.type]
-    if (fn) fn.call(vdom, event, dom)
-    if (i === 0) break
-    dom = path[--i]
-    vdom = vdom.children[indexOf(dom)]
-    if (vdom == null) return
-  }
+  recur(path, dom, vdom, event)
   event.stopPropagation() // no need to bubble into the real DOM
+}
+
+function recur(path, dom, vdom, event) {
+  if (vdom instanceof Node) return false // real DOMNode
+  if (vdom.type == 'Thunk') vdom = vdom.call()
+  if (path.length) {
+    var child = path.pop()
+    var vchild = vdom.children[indexOf(child)]
+    if (vchild != null) {
+      var stop = recur(path, child, vchild, event)
+      if (stop) return stop
+    }
+  }
+  var fn = vdom.events[event.type]
+  return fn
+    ? fn.call(vdom, event, dom)
+    : false
 }
 
 function indexOf(el) {
